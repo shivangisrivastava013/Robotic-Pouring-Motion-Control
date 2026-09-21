@@ -104,9 +104,19 @@ def evaluate_controllers(
     csv_path = os.path.join(output_dir, "controller_comparison.csv")
     df_summary.to_csv(csv_path, index=False)
 
+    export_json_data = {
+        "metadata": {
+            "num_episodes": num_episodes,
+            "target_volumes_ml": target_vols,
+            "environment": "RoboticPouringEnv (Gymnasium-compliant synthetic numerical pouring simulation)",
+            "evaluation_seed_base": 42,
+        },
+        "results": full_json_results,
+    }
+
     json_path = os.path.join(output_dir, "evaluation_summary.json")
     with open(json_path, "w") as f:
-        json.dump(full_json_results, f, indent=2)
+        json.dump(export_json_data, f, indent=2)
 
     # Plot Comparison Artifacts
     plot_controller_comparisons(df_summary, output_dir=output_dir)

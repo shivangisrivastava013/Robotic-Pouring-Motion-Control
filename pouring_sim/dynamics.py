@@ -20,8 +20,8 @@ class PouringDynamics:
         flow_threshold_rad: float = np.radians(45.0),
         max_tilt_rad: float = np.radians(90.0),
         max_angular_accel: float = np.radians(60.0),
-        flow_coef: float = 120.0,  # ml / (rad * s)
-        spill_coef: float = 25.0,  # ml / (rad/s * s)
+        flow_coef: float = 80.0,  # ml / (rad * s)
+        spill_coef: float = 10.0,  # ml / (rad/s * s)
     ):
         self.target_volume = float(target_volume)
         self.initial_source_volume = float(initial_source_volume)
@@ -85,8 +85,8 @@ class PouringDynamics:
             self.poured_volume += actual_flow_delta
             self.source_volume -= actual_flow_delta
 
-            # Spill calculation from excessive angular speed / splashing
-            if abs(self.angular_velocity) > np.radians(20.0):
+            # Spill calculation from excessive angular speed / splashing (>40 deg/s)
+            if abs(self.angular_velocity) > np.radians(40.0):
                 spill_delta = min(
                     self.spill_coef * abs(self.angular_velocity) * self.dt,
                     self.source_volume,

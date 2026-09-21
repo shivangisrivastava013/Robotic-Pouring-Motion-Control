@@ -27,14 +27,14 @@ class PouringRewardFunction:
         ang_vel = state["angular_velocity_rad_s"]
 
         volume_error = abs(poured - target)
-        overshoot = max(0.0, poured - target)
+        overshoot = max(0.0, poured - (target + 15.0))
 
         volume_error_penalty = -self.weight_error * (volume_error / max(1.0, target))
         spill_penalty = -self.weight_spill * (spill / max(1.0, target))
         smoothness_penalty = -self.weight_smoothness * (abs(ang_vel) + abs(action))
         overshoot_penalty = -self.weight_overshoot * (overshoot / max(1.0, target))
 
-        success = is_terminal and (volume_error <= self.success_threshold_ml) and (spill <= 15.0)
+        success = is_terminal and (volume_error <= 15.0) and (spill <= 20.0)
         success_bonus = self.success_bonus if success else 0.0
 
         total_reward = volume_error_penalty + spill_penalty + smoothness_penalty + overshoot_penalty + success_bonus

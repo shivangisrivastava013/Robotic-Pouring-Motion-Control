@@ -9,7 +9,6 @@ htmlcov/
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
-/checkpoints/*.zip
 *.pth
 
 .env

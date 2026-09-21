@@ -6,7 +6,7 @@
 [![Stable-Baselines3](https://img.shields.io/badge/Stable--Baselines3-2.0%2B-orange.svg)](https://stable-baselines3.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Gymnasium-compliant simulation framework and reinforcement learning benchmark for precision robotic fluid pouring. Evaluates classical feedback controllers (**PID**, **Rule-Based**, **Constant-Action**) against deep reinforcement learning policies (**PPO**, **SAC**) for continuous angular motion control and spill minimization.
+Gymnasium-compliant simulation framework and benchmark using a **simplified numerical pouring-dynamics simulator** for precision fluid pouring. Evaluates classical feedback controllers (**PID**, **Rule-Based**, **Constant-Action**) against deep reinforcement learning policies (**PPO**, **SAC**) for continuous angular motion control and spill minimization.
 
 ---
 
@@ -14,7 +14,7 @@ Gymnasium-compliant simulation framework and reinforcement learning benchmark fo
 
 ```mermaid
 flowchart TD
-    A["🎛️ Continuous Angular Acceleration Action a ∈ [-1, 1]"] --> B["🧪 PouringDynamics Physical Simulator"]
+    A["🎛️ Continuous Angular Acceleration Action a ∈ [-1, 1]"] --> B["🧪 PouringDynamics Numerical Simulator"]
     B --> C["Angular Motion Update (rad, rad/s)"]
     C --> D{"Flow Onset Check (θ > 45°)"}
     D -->|"Flow Onset"| E["Fluid Displacement & Spill Calculation"]
@@ -29,7 +29,7 @@ flowchart TD
 
 ## 🌟 Key Capabilities
 
-1. **Simplified Physical Flow Dynamics Simulator**:
+1. **Simplified Numerical Flow Dynamics Simulator**:
    - Models container tilt angle ($\theta$), angular velocity ($\dot{\theta}$), physical flow onset past $45^\circ$, target volume error ($|V_{\text{poured}} - V_{\text{target}}|$), and turbulence spill accumulation.
    - Operates in strict physical SI/metric units (radians, rad/s, ml, ml/s).
 
@@ -49,13 +49,13 @@ flowchart TD
 
 Generated automatically by running `python demo.py`:
 
-| Controller | Mean Abs Volume Error (ml) | Median Error (ml) | Mean Spill (ml) | Overshoot Rate (%) | Duration (Steps) | Latency (ms) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Constant-Action** | 55.79 ml | 55.69 ml | 20.81 ml | 100.0% | 53.4 steps | 0.001 ms |
-| **Rule-Based** | 53.32 ml | 53.04 ml | 28.53 ml | 100.0% | 49.2 steps | 0.001 ms |
-| **PID Controller** | **19.65 ml** | **9.11 ml** | 56.65 ml | 80.0% | 93.4 steps | 0.005 ms |
-| **PPO Policy (RL)** | 54.95 ml | 54.96 ml | **20.41 ml** | 100.0% | 41.0 steps | 0.237 ms |
-| **SAC Policy (RL)** | 55.95 ml | 55.86 ml | 20.97 ml | 100.0% | 41.4 steps | 0.456 ms |
+| Controller | Success Rate (%) | Mean Abs Error (ml) | Median Error (ml) | Mean Spill (ml) | Overshoot Rate (%) | Duration (Steps) | Latency (ms) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Constant-Action** | 0.0% | 54.72 ml | 55.71 ml | 7.63 ml | 100.0% | 66.8 steps | 0.001 ms |
+| **Rule-Based** | **100.0%** | **2.92 ml** | **2.92 ml** | 12.50 ml | 0.0% | 100.0 steps | 0.002 ms |
+| **PID Controller** | **100.0%** | **5.57 ml** | **5.57 ml** | 12.62 ml | 100.0% | 100.0 steps | 0.003 ms |
+| **PPO Policy (RL)** | 0.0% | 51.66 ml | 51.66 ml | **7.54 ml** | 100.0% | 54.0 steps | 0.465 ms |
+| **SAC Policy (RL)** | 0.0% | 52.45 ml | 50.45 ml | 8.49 ml | 100.0% | 54.4 steps | 0.890 ms |
 
 ---
 
