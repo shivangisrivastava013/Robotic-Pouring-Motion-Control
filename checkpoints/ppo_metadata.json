@@ -1,0 +1,22 @@
+{
+  "algorithm": "PPO",
+  "timesteps": 100000,
+  "seed": 42,
+  "hyperparameters": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "ent_coef": 0.01,
+    "seed": 42
+  },
+  "checkpoint_path": "./checkpoints/ppo_pouring.zip",
+  "training_duration_seconds": 83.0,
+  "packages": {
+    "python": "3.11.3",
+    "torch": "2.2.0",
+    "stable_baselines3": "2.2.1",
+    "gymnasium": "1.0.0"
+  }
+}

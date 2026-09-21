@@ -10,6 +10,8 @@ htmlcov/
 */.ipynb_checkpoints/*
 
 *.pth
+checkpoints/best_model.zip
+checkpoints/evaluations.npz
 
 .env
 .venv

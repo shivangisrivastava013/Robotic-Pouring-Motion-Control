@@ -51,11 +51,16 @@ Generated automatically by running `python demo.py`:
 
 | Controller | Success Rate (%) | Mean Abs Error (ml) | Median Error (ml) | Mean Spill (ml) | Overshoot Rate (%) | Duration (Steps) | Latency (ms) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Constant-Action** | 0.0% | 54.72 ml | 55.71 ml | 7.63 ml | 100.0% | 66.8 steps | 0.001 ms |
+| **Constant-Action** | 0.0% | 54.72 ml | 55.71 ml | 7.63 ml | 100.0% | 66.8 steps | 0.002 ms |
 | **Rule-Based** | **100.0%** | **2.92 ml** | **2.92 ml** | 12.50 ml | 0.0% | 100.0 steps | 0.002 ms |
-| **PID Controller** | **100.0%** | **5.57 ml** | **5.57 ml** | 12.62 ml | 100.0% | 100.0 steps | 0.003 ms |
-| **PPO Policy (RL)** | 0.0% | 51.66 ml | 51.66 ml | **7.54 ml** | 100.0% | 54.0 steps | 0.465 ms |
-| **SAC Policy (RL)** | 0.0% | 52.45 ml | 50.45 ml | 8.49 ml | 100.0% | 54.4 steps | 0.890 ms |
+| **PID Controller** | **100.0%** | **5.57 ml** | **5.57 ml** | 12.62 ml | 100.0% | 100.0 steps | 0.006 ms |
+| **PPO Policy (RL)** | **40.0%** | 24.94 ml | 26.52 ml | **9.82 ml** | 40.0% | 100.0 steps | 0.516 ms |
+| **SAC Policy (RL)** | 0.0% | 52.45 ml | 50.45 ml | 8.49 ml | 100.0% | 54.4 steps | 0.816 ms |
+
+> ℹ️ **Metric Definitions & Note on Overshoot Rate**:
+> - **Success Rate (%)**: Percentage of episodes completing with final volume error $|V_{\text{poured}} - V_{\text{target}}| \le 15.0\text{ ml}$ and cumulative spill $V_{\text{spill}} \le 20.0\text{ ml}$.
+> - **Overshoot Rate (%)**: Measures whether the poured volume exceeded the target threshold ($V_{\text{poured}} > V_{\text{target}} + 5.0\text{ ml}$) at any point during execution, even if final volume error remained within the success threshold.
+> - **Classical vs. Reinforcement Learning**: Classical feedback controllers (**Rule-Based** and **PID**) achieve high precision (100% success rate with ~2.9–5.5 ml error). **PPO** achieves 40.0% multi-trial success rate with reward shaping, while off-policy **SAC** serves as an initial continuous-control RL baseline for policy optimization research. Full training provenance (hyperparameters, seeds, timesteps, duration) is recorded in [`results/evaluation_summary.json`](results/evaluation_summary.json).
 
 ---
 

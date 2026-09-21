@@ -1,0 +1,22 @@
+{
+  "algorithm": "SAC",
+  "timesteps": 50000,
+  "seed": 42,
+  "hyperparameters": {
+    "learning_rate": 0.0003,
+    "buffer_size": 200000,
+    "learning_starts": 5000,
+    "batch_size": 256,
+    "tau": 0.005,
+    "gamma": 0.99,
+    "seed": 42
+  },
+  "checkpoint_path": "./checkpoints/sac_pouring.zip",
+  "training_duration_seconds": 105.0,
+  "packages": {
+    "python": "3.11.3",
+    "torch": "2.2.0",
+    "stable_baselines3": "2.2.1",
+    "gymnasium": "1.0.0"
+  }
+}

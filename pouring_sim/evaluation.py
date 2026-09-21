@@ -104,12 +104,24 @@ def evaluate_controllers(
     csv_path = os.path.join(output_dir, "controller_comparison.csv")
     df_summary.to_csv(csv_path, index=False)
 
+    # Load RL Training Provenance Metadata if available
+    ppo_meta_path = os.path.join("./checkpoints", "ppo_metadata.json")
+    sac_meta_path = os.path.join("./checkpoints", "sac_metadata.json")
+    training_provenance = {}
+    if os.path.exists(ppo_meta_path):
+        with open(ppo_meta_path, "r") as f:
+            training_provenance["PPO"] = json.load(f)
+    if os.path.exists(sac_meta_path):
+        with open(sac_meta_path, "r") as f:
+            training_provenance["SAC"] = json.load(f)
+
     export_json_data = {
         "metadata": {
             "num_episodes": num_episodes,
             "target_volumes_ml": target_vols,
             "environment": "RoboticPouringEnv (Gymnasium-compliant synthetic numerical pouring simulation)",
             "evaluation_seed_base": 42,
+            "training_provenance": training_provenance,
         },
         "results": full_json_results,
     }
