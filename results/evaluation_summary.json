@@ -1,0 +1,57 @@
+{
+  "Constant-Action": {
+    "controller": "Constant-Action",
+    "success_rate": 0.0,
+    "mean_absolute_error_ml": 55.79,
+    "median_error_ml": 55.69,
+    "mean_spill_ml": 20.81,
+    "overshoot_rate": 100.0,
+    "mean_duration_steps": 53.4,
+    "mean_reward": -48.25,
+    "inference_latency_ms": 0.001
+  },
+  "Rule-Based": {
+    "controller": "Rule-Based",
+    "success_rate": 0.0,
+    "mean_absolute_error_ml": 53.32,
+    "median_error_ml": 53.04,
+    "mean_spill_ml": 28.53,
+    "overshoot_rate": 100.0,
+    "mean_duration_steps": 49.2,
+    "mean_reward": -44.53,
+    "inference_latency_ms": 0.001
+  },
+  "PID": {
+    "controller": "PID",
+    "success_rate": 0.0,
+    "mean_absolute_error_ml": 19.65,
+    "median_error_ml": 9.11,
+    "mean_spill_ml": 56.65,
+    "overshoot_rate": 80.0,
+    "mean_duration_steps": 93.4,
+    "mean_reward": -81.04,
+    "inference_latency_ms": 0.005
+  },
+  "PPO (RL)": {
+    "controller": "PPO (RL)",
+    "success_rate": 0.0,
+    "mean_absolute_error_ml": 54.95,
+    "median_error_ml": 54.96,
+    "mean_spill_ml": 20.41,
+    "overshoot_rate": 100.0,
+    "mean_duration_steps": 41.0,
+    "mean_reward": -36.3,
+    "inference_latency_ms": 0.237
+  },
+  "SAC (RL)": {
+    "controller": "SAC (RL)",
+    "success_rate": 0.0,
+    "mean_absolute_error_ml": 55.95,
+    "median_error_ml": 55.86,
+    "mean_spill_ml": 20.97,
+    "overshoot_rate": 100.0,
+    "mean_duration_steps": 41.4,
+    "mean_reward": -36.63,
+    "inference_latency_ms": 0.456
+  }
+}

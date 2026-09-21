@@ -1,47 +1,152 @@
-# Robotic Pouring Motion Control via Reinforcement Learning
+# Precision Robotic Pouring Motion Control in Gymnasium
 
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![PyBullet](https://img.shields.io/badge/PyBullet-Physics_Engine-FF6F00?style=for-the-badge)](https://pybullet.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![CI Pipeline](https://github.com/shivangisrivastava013/Robotic-Pouring-Motion-Control/actions/workflows/ci.yml/badge.svg)](https://github.com/shivangisrivastava013/Robotic-Pouring-Motion-Control/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Gymnasium](https://img.shields.io/badge/Gymnasium-1.0%2B-emerald.svg)](https://gymnasium.farama.org/)
+[![Stable-Baselines3](https://img.shields.io/badge/Stable--Baselines3-2.0%2B-orange.svg)](https://stable-baselines3.readthedocs.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Robotic joint trajectory planning and liquid container pouring simulation utilizing **Deep Reinforcement Learning (PPO / SAC)** and physics-based motion control for precise fluid volume control and spill avoidance.
-
----
-
-## 🌟 Features
-- 🧪 **Physics Fluid Simulation:** Simulates container angular tilt dynamics, fluid velocity, target liquid volume error, and spill penalty loss functions.
-- 🤖 **Deep RL Control Policy:** Proximal Policy Optimization (PPO) & Soft Actor-Critic (SAC) neural policies for continuous torque and joint trajectory regulation.
-- 📈 **Trajectory Analytics:** Automated plotting of joint angular tilt vs poured fluid volume.
+Gymnasium-compliant simulation framework and reinforcement learning benchmark for precision robotic fluid pouring. Evaluates classical feedback controllers (**PID**, **Rule-Based**, **Constant-Action**) against deep reinforcement learning policies (**PPO**, **SAC**) for continuous angular motion control and spill minimization.
 
 ---
 
-## 📁 Repository Structure
-```text
-Robotic-Pouring-Motion-Control/
-├── pouring_sim/            # Simulation & RL Environment Package
-│   ├── __init__.py
-│   └── environment.py      # Physics Pouring Environment
-├── demo.py                 # 1-Command Trajectory Simulation Loop
-├── requirements.txt
-├── .gitignore
-├── LICENSE
-└── README.md
+## 📐 System Architecture
+
+```mermaid
+flowchart TD
+    A["🎛️ Continuous Angular Acceleration Action a ∈ [-1, 1]"] --> B["🧪 PouringDynamics Physical Simulator"]
+    B --> C["Angular Motion Update (rad, rad/s)"]
+    C --> D{"Flow Onset Check (θ > 45°)"}
+    D -->|"Flow Onset"| E["Fluid Displacement & Spill Calculation"]
+    D -->|"No Flow"| F["Static State Update"]
+    E --> G["7-Dim State Vector Observation"]
+    F --> G
+    G --> H["PouringRewardFunction (Multi-Component Penalty)"]
+    H --> I["RL Agents (PPO / SAC) & Classical Controllers (PID)"]
 ```
 
 ---
 
-## ⚡ Quick Start
+## 🌟 Key Capabilities
+
+1. **Simplified Physical Flow Dynamics Simulator**:
+   - Models container tilt angle ($\theta$), angular velocity ($\dot{\theta}$), physical flow onset past $45^\circ$, target volume error ($|V_{\text{poured}} - V_{\text{target}}|$), and turbulence spill accumulation.
+   - Operates in strict physical SI/metric units (radians, rad/s, ml, ml/s).
+
+2. **Full Gymnasium Compliance**:
+   - Class `RoboticPouringEnv` inherits from `gymnasium.Env` and passes `check_env(env)` validation from Stable-Baselines3 without errors or warnings.
+
+3. **Multi-Component Explainable Reward Function**:
+   - $R = -w_e |V_{\text{poured}} - V_{\text{target}}| - w_s V_{\text{spill}} - w_a |\dot{\theta}| - w_o V_{\text{overshoot}} + b_{\text{success}}$
+   - Emits explicit penalty component breakdown in `info` dictionary (`volume_error_penalty`, `spill_penalty`, `smoothness_penalty`, `success_bonus`).
+
+4. **Comprehensive Controller Benchmarking**:
+   - Evaluates classical controllers (**Constant-Action**, **Rule-Based**, **PID**) alongside learned continuous-control policies (**PPO**, **SAC**) over 100 multi-trial randomized episodes.
+
+---
+
+## 📊 Empirical Controller Benchmark Results (100 Episodes)
+
+Generated automatically by running `python demo.py`:
+
+| Controller | Mean Abs Volume Error (ml) | Median Error (ml) | Mean Spill (ml) | Overshoot Rate (%) | Duration (Steps) | Latency (ms) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Constant-Action** | 55.79 ml | 55.69 ml | 20.81 ml | 100.0% | 53.4 steps | 0.001 ms |
+| **Rule-Based** | 53.32 ml | 53.04 ml | 28.53 ml | 100.0% | 49.2 steps | 0.001 ms |
+| **PID Controller** | **19.65 ml** | **9.11 ml** | 56.65 ml | 80.0% | 93.4 steps | 0.005 ms |
+| **PPO Policy (RL)** | 54.95 ml | 54.96 ml | **20.41 ml** | 100.0% | 41.0 steps | 0.237 ms |
+| **SAC Policy (RL)** | 55.95 ml | 55.86 ml | 20.97 ml | 100.0% | 41.4 steps | 0.456 ms |
+
+---
+
+## 🚀 Quickstart & Reproducible Commands
+
+### 1. Installation
 ```bash
 git clone https://github.com/shivangisrivastava013/Robotic-Pouring-Motion-Control.git
 cd Robotic-Pouring-Motion-Control
 
 pip install -r requirements.txt
+```
+
+### 2. Run Full Multi-Controller Benchmark
+```bash
+# Execute 100-episode evaluation across all controllers
 python demo.py
+```
+
+### 3. Train Reinforcement Learning Policies
+```bash
+# Train PPO Agent for 50,000 timesteps
+python scripts/train_ppo.py --timesteps 50000
+
+# Train SAC Agent for 40,000 timesteps
+python scripts/train_sac.py --timesteps 40000
+```
+
+### 4. Run Pytest Suite & Gymnasium Compliance Check
+```bash
+# Execute Pytest test suite (100% pass)
+python -m pytest tests/ -v
+
+# Verify check_env compliance
+python -c "from stable_baselines3.common.env_checker import check_env; from pouring_sim.environment import RoboticPouringEnv; check_env(RoboticPouringEnv())"
 ```
 
 ---
 
-## 👤 Author
-**Shivangi Srivastava**  
-MS in Artificial Intelligence @ NJIT  
-[LinkedIn Profile](https://www.linkedin.com/in/shivangisrivastava013/) | [Portfolio](https://shivangisrivastava013.github.io/shivangi-portfolio/)
+## 🐳 Docker Deployment
+
+```bash
+# Build Docker Image
+docker build -t robotic-pouring-motion-control:latest .
+
+# Run Containerized Benchmark Demonstration
+docker run --rm robotic-pouring-motion-control:latest
+```
+
+---
+
+## 🛠️ Project Structure
+
+```text
+Robotic-Pouring-Motion-Control/
+├── configs/                  # YAML environment & algorithm hyperparameter configs
+│   ├── environment.yaml
+│   ├── ppo.yaml
+│   └── sac.yaml
+├── demo.py                   # Main benchmark demonstration entrypoint
+├── Dockerfile                # Container deployment specification
+├── notebooks/                # Jupyter exploration notebook
+│   └── pouring_motion_control.ipynb
+├── pouring_sim/              # Core Package
+│   ├── __init__.py
+│   ├── dynamics.py           # Physical flow dynamics & SI metric equations
+│   ├── environment.py        # Gymnasium-compliant RoboticPouringEnv
+│   ├── rewards.py            # Multi-component reward function
+│   ├── controllers.py        # Constant, Rule-Based, PID, and SB3 wrapper controllers
+│   ├── evaluation.py         # Multi-trial controller evaluation engine
+│   └── visualization.py      # Matplotlib plots & ImageIO animated GIF generator
+├── pyproject.toml            # Build & quality metadata
+├── requirements.txt          # Dependencies (Gymnasium, SB3, PyTorch, ImageIO)
+├── results/                  # Generated benchmark evaluation artifacts
+│   ├── controller_comparison.csv
+│   ├── evaluation_summary.json
+│   ├── success_rate.png
+│   ├── volume_error.png
+│   ├── spill_comparison.png
+│   ├── trajectory_examples.png
+│   └── pouring_demo.gif
+└── tests/                    # Pytest test suite
+    ├── conftest.py
+    ├── test_controllers.py
+    ├── test_dynamics.py
+    ├── test_gym_compliance.py
+    └── test_rl_smoke.py
+```
+
+---
+
+## 📜 License
+
+Distributed under the [MIT License](LICENSE).

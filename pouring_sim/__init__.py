@@ -1,9 +1,11 @@
-"""
-Robotic Pouring Motion Control & Reinforcement Learning Simulation
-Author: Shivangi Srivastava (MS in AI @ NJIT)
-"""
+from pouring_sim.controllers import ConstantActionController, PIDController, RuleBasedController
+from pouring_sim.environment import RoboticPouringEnv
+from pouring_sim.evaluation import evaluate_controllers
 
-__version__ = "1.0.0"
-__author__ = "Shivangi Srivastava"
-
-from .environment import RoboticPouringEnv
+__all__ = [
+    "ConstantActionController",
+    "PIDController",
+    "RoboticPouringEnv",
+    "RuleBasedController",
+    "evaluate_controllers",
+]

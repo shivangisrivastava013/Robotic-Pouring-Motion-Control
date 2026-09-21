@@ -1,0 +1,10 @@
+algorithm: SAC
+total_timesteps: 40000
+learning_rate: 0.0003
+buffer_size: 50000
+learning_starts: 1000
+batch_size: 256
+tau: 0.005
+gamma: 0.99
+ent_coef: "auto"
+seed: 42

@@ -1,0 +1,18 @@
+environment:
+  target_volume: 200.0        # ml
+  initial_source_volume: 500.0 # ml
+  max_steps: 100
+  dt: 0.1                      # seconds per step
+  flow_threshold_deg: 45.0     # tilt angle threshold (degrees)
+  flow_coefficient: 5.0        # ml / (deg * sec)
+  spill_rate_multiplier: 2.0   # spill scaling when tilting too fast
+  max_tilt_deg: 90.0           # max tilt angle
+  max_angular_accel: 30.0      # deg / s^2
+
+reward:
+  weight_error: 1.0
+  weight_spill: 2.0
+  weight_smoothness: 0.05
+  weight_overshoot: 3.0
+  success_bonus: 10.0
+  success_threshold_ml: 10.0
