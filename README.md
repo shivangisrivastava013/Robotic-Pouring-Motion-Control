@@ -6,15 +6,23 @@
 [![Stable-Baselines3](https://img.shields.io/badge/Stable--Baselines3-2.0%2B-orange.svg)](https://stable-baselines3.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Gymnasium-compliant simulation framework and benchmark using a **simplified numerical pouring-dynamics simulator** for precision fluid pouring. Evaluates classical feedback controllers (**PID**, **Rule-Based**, **Constant-Action**) against deep reinforcement learning policies (**PPO**, **SAC**) for continuous angular motion control and spill minimization.
+This project models robotic pouring in a simplified Gymnasium simulation. It compares PID, rule-based, and constant-action controllers with PPO and SAC policies for volume accuracy, smooth motion, and spill reduction.
+
+## Demo and results
+
+- [Portfolio project page](https://shivangisrivastava013.github.io/shivangi-portfolio/#projects)
+- [Controller demo](demo.py)
+- [Controller comparison data](results/controller_comparison.csv)
+- [Trajectory visualization](results/robotic_pouring_trajectory.png)
+- [Success-rate chart](results/success_rate.png)
 
 ---
 
-## 📐 System Architecture
+## System architecture
 
 ```mermaid
 flowchart TD
-    A["🎛️ Continuous Angular Acceleration Action a ∈ [-1, 1]"] --> B["🧪 PouringDynamics Numerical Simulator"]
+    A["Continuous Angular Acceleration Action a ∈ [-1, 1]"] --> B["PouringDynamics Numerical Simulator"]
     B --> C["Angular Motion Update (rad, rad/s)"]
     C --> D{"Flow Onset Check (θ > 45°)"}
     D -->|"Flow Onset"| E["Fluid Displacement & Spill Calculation"]
@@ -27,7 +35,7 @@ flowchart TD
 
 ---
 
-## 🌟 Key Capabilities
+## Capabilities
 
 1. **Simplified Numerical Flow Dynamics Simulator**:
    - Models container tilt angle ($\theta$), angular velocity ($\dot{\theta}$), physical flow onset past $45^\circ$, target volume error ($|V_{\text{poured}} - V_{\text{target}}|$), and turbulence spill accumulation.
@@ -45,7 +53,7 @@ flowchart TD
 
 ---
 
-## 📊 Empirical Controller Benchmark Results (100 Episodes)
+## Controller benchmark results (100 Episodes)
 
 Generated automatically by running `python demo.py`:
 
@@ -57,14 +65,14 @@ Generated automatically by running `python demo.py`:
 | **PPO Policy (RL)** | **40.0%** | 24.94 ml | 26.52 ml | **9.82 ml** | 40.0% | 100.0 steps | 0.516 ms |
 | **SAC Policy (RL)** | 0.0% | 52.45 ml | 50.45 ml | 8.49 ml | 100.0% | 54.4 steps | 0.816 ms |
 
-> ℹ️ **Metric Definitions & Note on Overshoot Rate**:
+> **Metric Definitions & Note on Overshoot Rate**:
 > - **Success Rate (%)**: Percentage of episodes completing with final volume error $|V_{\text{poured}} - V_{\text{target}}| \le 15.0\text{ ml}$ and cumulative spill $V_{\text{spill}} \le 20.0\text{ ml}$.
 > - **Overshoot Rate (%)**: Measures whether the poured volume exceeded the target threshold ($V_{\text{poured}} > V_{\text{target}} + 5.0\text{ ml}$) at any point during execution, even if final volume error remained within the success threshold.
 > - **Classical vs. Reinforcement Learning**: Classical feedback controllers (**Rule-Based** and **PID**) achieve high precision (100% success rate with ~2.9–5.5 ml error). **PPO** achieves 40.0% multi-trial success rate with reward shaping, while off-policy **SAC** serves as an initial continuous-control RL baseline for policy optimization research. Full training provenance (hyperparameters, seeds, timesteps, duration) is recorded in [`results/evaluation_summary.json`](results/evaluation_summary.json).
 
 ---
 
-## 🚀 Quickstart & Reproducible Commands
+## Getting started
 
 ### 1. Installation
 ```bash
@@ -103,7 +111,7 @@ python -c "from stable_baselines3.common.env_checker import check_env; from pour
 
 ---
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ```bash
 # Build Docker Image
@@ -115,7 +123,7 @@ docker run --rm robotic-pouring-motion-control:latest
 
 ---
 
-## 🛠️ Project Structure
+## Repository structure
 
 ```text
 Robotic-Pouring-Motion-Control/
@@ -155,6 +163,6 @@ Robotic-Pouring-Motion-Control/
 
 ---
 
-## 📜 License
+## License
 
 Distributed under the [MIT License](LICENSE).
