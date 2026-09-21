@@ -74,19 +74,22 @@ cd Robotic-Pouring-Motion-Control
 pip install -r requirements.txt
 ```
 
-### 2. Run Full Multi-Controller Benchmark
+### 2. Verify Checkpoints & Run Multi-Controller Benchmark
 ```bash
+# Verify or download pre-trained model checkpoints (with SHA-256 validation)
+python scripts/download_checkpoints.py
+
 # Execute 100-episode evaluation across all controllers
 python demo.py
 ```
 
 ### 3. Train Reinforcement Learning Policies
 ```bash
-# Train PPO Agent for 50,000 timesteps
-python scripts/train_ppo.py --timesteps 50000
+# Train PPO Agent for 100,000 timesteps (Seed 42)
+python scripts/train_ppo.py --timesteps 100000 --seed 42
 
-# Train SAC Agent for 40,000 timesteps
-python scripts/train_sac.py --timesteps 40000
+# Train SAC Agent for 50,000 timesteps (Seed 42)
+python scripts/train_sac.py --timesteps 50000 --seed 42
 ```
 
 ### 4. Run Pytest Suite & Gymnasium Compliance Check

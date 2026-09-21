@@ -19,7 +19,7 @@ from pouring_sim.environment import RoboticPouringEnv
 
 def main():
     parser = argparse.ArgumentParser(description="Train SAC policy for RoboticPouringEnv.")
-    parser.add_argument("--timesteps", type=int, default=100000, help="Total training timesteps.")
+    parser.add_argument("--timesteps", type=int, default=50000, help="Total training timesteps.")
     parser.add_argument("--lr", type=float, default=0.0003, help="Learning rate.")
     parser.add_argument("--seed", type=int, default=42, help="Random seed.")
     parser.add_argument("--save-dir", type=str, default="./checkpoints", help="Directory to save model checkpoint.")
